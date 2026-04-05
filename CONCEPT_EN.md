@@ -87,6 +87,28 @@ compute heat
 This separation avoids the overclaim that “MRI-like rotation directly cools the air,” and instead fixes the roles more honestly:
 **air cooling is internal, magnetic resonance is auxiliary, radiation is final**.
 
+## Evolution toward a self-circulating earthlike starship
+
+The long-term direction here is not “build a starship immediately.”
+It is to ask whether a **small satellite compute node can evolve into a self-circulating earthlike spacecraft concept**.
+
+```text
+satellite compute node
+-> enclosed compute habitat
+-> resonant orbital cluster
+-> self-circulating gate habitat
+-> earthlike starship concept
+```
+
+This means:
+
+- `Satellite_Design_Stack` checks whether the node is satellite-realistic at all
+- `Space_Thermal_Dynamics_Foundation` checks whether internal convection plus external radiation can close the thermal loop
+- `Superconducting_Magnet_Stack` checks whether the high-field platform is stable enough
+- `TerraCore` via the satellite adapter checks whether atmosphere/water/power/mass conditions can move toward a closed-loop habitat
+
+So “gate” should currently be read less as a proven device and more as a **system language for a resonance-linked orbital infrastructure that may evolve into a larger habitat/vehicle concept**.
+
 ## Conclusion
 
-Magnetic Resonance Foundation v0.4.0 is a foundation that **separates a realistic MRI path from an experimental gate path, then bridges outward into optics, thermal, manufacturing, and foundry contexts when needed.**
+Magnetic Resonance Foundation v0.5.0 is a foundation that **separates a realistic MRI path from an experimental gate path, then bridges outward into optics, thermal, manufacturing, foundry, and TerraCore contexts while also providing a staged roadmap from a small satellite data center toward an earthlike starship concept.**

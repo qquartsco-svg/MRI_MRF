@@ -4,7 +4,7 @@ build-backend = "setuptools.backends._legacy:_Backend"
 
 [project]
 name = "magnetic-resonance-foundation"
-version = "0.4.0"
+version = "0.5.0"
 description = "Unified magnetic resonance screening: MRI design path (gradient, RF, Bloch, SNR, SAR) + space gate path (confinement, plasma, toroidal, RF link, Lagrange) sharing ω₀=γB₀."
 requires-python = ">=3.10"
 license = {text = "MIT"}

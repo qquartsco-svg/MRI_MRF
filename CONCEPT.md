@@ -148,7 +148,34 @@ compute heat
 이 분리 원칙은 “MRI식 회전이 공기를 직접 냉각한다”는 과장을 피하고,
 **자기공명은 보조층, 공냉은 내부층, 복사는 최종층**으로 역할을 고정합니다.
 
+## 자가순환 지구환경형 우주선으로의 진화
+
+이 저장소가 보는 장기 방향은 “바로 우주선을 만든다”가 아니라,
+**작은 위성형 데이터센터에서 시작해 자가순환 지구환경형 우주선 개념으로 진화할 수 있는가**를 단계적으로 읽는 것입니다.
+
+```text
+satellite compute node
+-> enclosed compute habitat
+-> resonant orbital cluster
+-> self-circulating gate habitat
+-> earthlike starship concept
+```
+
+여기서 핵심은:
+
+- `Satellite_Design_Stack`
+  - 작은 위성형 노드가 실제로 성립하는가
+- `Space_Thermal_Dynamics_Foundation`
+  - 열을 내부 대류 + 외부 복사로 자립시킬 수 있는가
+- `Superconducting_Magnet_Stack`
+  - 강자기장 플랫폼이 quench/thermal 측면에서 버티는가
+- `Satellite_Design_Stack.adapters.TerraCoreAdapter`
+  - 내부 대기/물/전력/질량 조건이 폐회로 해비타트로 갈 수 있는가
+
+즉 “gate”는 현재 시점에서 장치 명칭보다
+**공명적으로 연결된 우주 인프라가 장기적으로 어떤 구조체로 발전할 수 있는지를 읽는 시스템 언어**에 가깝습니다.
+
 ## 결론
 
-Magnetic Resonance Foundation v0.4.0은 “MRI와 우주 게이트를 섞어버린 저장소”가 아니라,  
-**공유 자기공명 코어 위에 현실 경로와 실험 경로를 분리해 올리고, 필요할 때 광학·열·제조·파운드리로 브리징하는 foundation** 입니다.
+Magnetic Resonance Foundation v0.5.0은 “MRI와 우주 게이트를 섞어버린 저장소”가 아니라,  
+**공유 자기공명 코어 위에 현실 경로와 실험 경로를 분리해 올리고, 필요할 때 광학·열·제조·파운드리·TerraCore로 브리징하며, 작은 위성형 데이터센터에서 자가순환 우주선 개념으로 이어지는 진화 로드맵까지 읽는 foundation** 입니다.

@@ -62,3 +62,24 @@ python3 examples/system_stack_demo.py
 - `MRF -> Superconducting_Magnet_Stack`
 
 개념 배경은 상위 디렉터리 [CONCEPT.md](../CONCEPT.md)를 참고하세요.
+
+## space_gate_evolution_demo.py
+
+저장소 루트에서 실행:
+
+```bash
+python3 examples/space_gate_evolution_demo.py
+```
+
+이 예제는
+
+- 작은 위성형 데이터센터
+- 위성/오비탈 readiness
+- 제조성
+- 초전도 자기장 플랫폼
+- TerraCore 자가순환 viability
+
+를 묶어 현재 진화 단계가
+`satellite_compute_node` 인지,
+`self_circulating_gate_habitat` 쪽으로 올라갔는지
+보수적으로 읽어줍니다.

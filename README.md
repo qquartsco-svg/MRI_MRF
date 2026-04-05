@@ -5,8 +5,8 @@
 
 | 항목 | 내용 |
 |------|------|
-| 버전 | `v0.4.0` |
-| 테스트 | `103 passed` |
+| 버전 | `v0.5.0` |
+| 테스트 | `106 passed` |
 | 의존성 | 런타임: 표준 라이브러리만 · 테스트: `pytest>=8.0` (선택) |
 | 패키지명 | `magnetic-resonance-foundation` |
 | Python | `>=3.10` |
@@ -109,6 +109,7 @@ magnetic_resonance/
 ├── foundation.py           통합 analyze()
 ├── athena_stage.py         ATHENA 판정
 ├── space_gate_datacenter.py 우주 게이트 데이터센터 열 스택
+├── space_gate_evolution.py 위성형 노드 -> 자가순환 우주선 진화 평가
 ├── ecosystem_bridges.py    형제 엔진 연결
 ├── cli.py                  CLI
 └── __init__.py
@@ -302,7 +303,7 @@ python3 scripts/release_check.py
 python3 -m pytest tests/ -q
 ```
 
-현재: **103 passed** (v0.4.0) — Larmor · Gate resonance · Confinement · Thermal · Plasma · Toroidal · RF link · Lagrange · Gradient · RF pulse · Bloch · SNR · SAR · MRI screening · Foundation MRI · Ecosystem bridges · Space gate datacenter stack · Satellite bridge · Orbital bridge · CLI · Integrity
+현재: **106 passed** (v0.5.0) — Larmor · Gate resonance · Confinement · Thermal · Plasma · Toroidal · RF link · Lagrange · Gradient · RF pulse · Bloch · SNR · SAR · MRI screening · Foundation MRI · Ecosystem bridges · Space gate datacenter stack · Satellite bridge · Orbital bridge · TerraCore bridge · Evolution roadmap · CLI · Integrity
 
 ---
 
@@ -316,7 +317,7 @@ python3 -m pytest tests/ -q
 | `Optics_Foundation` | 라모어 주파수 → 파장 snapshot → 광학 screening |
 | `Satellite_Design_Stack` | 게이트 하드웨어를 위성 payload mission으로 투영해 readiness 확인 |
 | `OrbitalCore_Engine` | 게이트/노드 배치를 궤도 건강도 `omega_orb`로 스크리닝 |
-| `Superconducting_Magnet_Stack` | 강자기장 코일을 quench/thermal/readiness 언어로 직접 스크리닝 |
+| `TerraCore / Satellite adapter` | 위성형 게이트 노드를 폐회로 생존/자가순환 해비타트 viability로 투영 |
 | `Manufacturing_Translation_Foundation` | 코일/구조물 제조 readiness handoff |
 | `Foundry_Implementation_Engine` | 공정/signoff readiness tick |
 | `Fabless-style semiconductor flow` | MTF adapter를 통한 간접 semiconductor chain 연결 |
@@ -423,14 +424,55 @@ report = screen_space_gate_datacenter(
 **공명/자기장 개념 -> 위성 탑재체 readiness -> 궤도 건강도 -> 제조/공정 handoff**
 까지 한 줄로 이어질 수 있습니다.
 
+## 자가순환 지구환경형 우주선 개념
+
+MRF에서 말하는 `gate`는 지금 당장 완성형 장치를 뜻하지 않습니다.
+
+더 정확히는 다음과 같은 **진화 경로**를 뜻합니다.
+
+```text
+small satellite compute node
+-> enclosed compute habitat
+-> resonant orbital cluster
+-> self-circulating gate habitat
+-> earthlike starship concept
+```
+
+이 흐름에서 중요한 점:
+- 시작점은 **작은 위성형 데이터센터**
+- 다음은 **내부 밀폐 대기 + 공냉 + 외부 복사**
+- 그다음은 **공명형 궤도 클러스터**
+- 그 위에 **TerraCore 기반 폐회로 자가순환**
+- 마지막이 **지구환경형 우주선 개념**
+
+즉 이 저장소는 “바로 우주선을 만든다”가 아니라,
+**작은 위성형 노드에서 시작해 자가순환 우주 인프라로 진화할 수 있는지 단계적으로 읽는 foundation** 입니다.
+
+### TerraCore 연결
+
+`try_terracore_gate_bridge(...)` 는 위성형 게이트 노드를 `Satellite_Design_Stack`의 TerraCore adapter로 보내
+
+- `volume_ok`
+- `power_ok`
+- `mass_ok`
+- `terracore_available`
+- `omega_terracore`
+
+를 읽습니다.
+
+이 값은 “지구 같은 내부 환경을 유지할 수 있는가”를 보수적으로 스크리닝하는 초기 슬롯입니다.
+
 ## 시스템 스택 문서
 
 상위 연결 구조는 [SYSTEM_STACK.md](/Users/jazzin/Desktop/00_BRAIN/_staging/Magnetic_Resonance_Foundation/docs/SYSTEM_STACK.md) 에 정리했습니다.
+
+진화 로드맵은 [SPACE_GATE_EVOLUTION_ROADMAP.md](/Users/jazzin/Desktop/00_BRAIN/_staging/Magnetic_Resonance_Foundation/docs/SPACE_GATE_EVOLUTION_ROADMAP.md) 에 정리했습니다.
 
 추천 데모:
 - [space_gate_datacenter_demo.py](/Users/jazzin/Desktop/00_BRAIN/_staging/Magnetic_Resonance_Foundation/examples/space_gate_datacenter_demo.py)
 - [factory_handoff_demo.py](/Users/jazzin/Desktop/00_BRAIN/_staging/Magnetic_Resonance_Foundation/examples/factory_handoff_demo.py)
 - [system_stack_demo.py](/Users/jazzin/Desktop/00_BRAIN/_staging/Magnetic_Resonance_Foundation/examples/system_stack_demo.py)
+- [space_gate_evolution_demo.py](/Users/jazzin/Desktop/00_BRAIN/_staging/Magnetic_Resonance_Foundation/examples/space_gate_evolution_demo.py)
 
 ---
 
@@ -442,6 +484,7 @@ report = screen_space_gate_datacenter(
 | v0.2.0 | Plasma Transport + Toroidal + RF Link + Lagrange |
 | v0.3.0 | ATHENA 판정 · examples · CONCEPT_EN |
 | **v0.4.0** | **MRI PATH: Gradient → RF Pulse → Bloch → SNR → SAR** |
+| **v0.5.0** | **Space gate evolution roadmap + TerraCore self-circulation bridge + superconducting system stack** |
 
 ---
 

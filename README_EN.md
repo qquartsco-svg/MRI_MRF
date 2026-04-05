@@ -5,8 +5,8 @@
 
 | Item | Details |
 |------|---------|
-| Version | `v0.4.0` |
-| Tests | `103 passed` |
+| Version | `v0.5.0` |
+| Tests | `106 passed` |
 | Deps | Runtime: stdlib only · Test: `pytest>=8.0` (optional) |
 | Package | `magnetic-resonance-foundation` |
 | Python | `>=3.10` |
@@ -109,6 +109,7 @@ magnetic_resonance/
 ├── foundation.py           Unified analyze()
 ├── athena_stage.py         ATHENA judgment
 ├── space_gate_datacenter.py Space gate data center thermal stack
+├── space_gate_evolution.py satellite-node -> self-circulating spacecraft roadmap evaluator
 ├── ecosystem_bridges.py    Sibling engine bridges
 ├── cli.py                  CLI entry point
 └── __init__.py
@@ -278,7 +279,7 @@ python3 scripts/verify_signature.py     # verify
 ## Tests
 
 ```bash
-python3 -m pytest tests/ -q    # 103 passed (v0.4.0)
+python3 -m pytest tests/ -q    # 106 passed (v0.5.0)
 ```
 
 ## Sibling Engine Bridges
@@ -289,6 +290,7 @@ python3 -m pytest tests/ -q    # 103 passed (v0.4.0)
 - `Satellite_Design_Stack` — project gate hardware into a satellite payload mission and readiness report
 - `OrbitalCore_Engine` — project gate/node placement into orbital health language (`omega_orb`)
 - `Superconducting_Magnet_Stack` — directly screen high-field coils in quench/thermal/readiness language
+- `TerraCore / Satellite adapter` — project a gate node toward closed-loop habitat and self-circulation viability
 - `Manufacturing_Translation_Foundation` — coil/structure manufacturing readiness handoff
 - `Foundry_Implementation_Engine` — process/signoff readiness tick
 - `Fabless-style semiconductor flow` — indirect semiconductor-chain bridge via MTF adapters
@@ -385,9 +387,31 @@ MRF now also has direct bridges into satellite and orbital engines.
 So the repository can now connect:
 **resonance / magnetic concepts -> satellite payload readiness -> orbital health -> manufacturing and process handoff**.
 
+## Earthlike starship roadmap
+
+The long-term concept is intentionally staged:
+
+```text
+small satellite compute node
+-> enclosed compute habitat
+-> resonant orbital cluster
+-> self-circulating gate habitat
+-> earthlike starship concept
+```
+
+This repository does not claim that the last stage is already an engineering device.
+It provides a conservative way to ask:
+
+- can a small compute satellite close its thermal loop?
+- can it evolve into an enclosed habitat-like node?
+- can resonance/orbital clustering be screened?
+- can TerraCore-style closed-loop survival become part of the stack?
+
 ## System stack document
 
 The higher-level connection map is summarized in [docs/SYSTEM_STACK.md](/Users/jazzin/Desktop/00_BRAIN/_staging/Magnetic_Resonance_Foundation/docs/SYSTEM_STACK.md).
+
+The staged evolution map is summarized in [docs/SPACE_GATE_EVOLUTION_ROADMAP.md](/Users/jazzin/Desktop/00_BRAIN/_staging/Magnetic_Resonance_Foundation/docs/SPACE_GATE_EVOLUTION_ROADMAP.md).
 
 ---
 
@@ -399,6 +423,7 @@ The higher-level connection map is summarized in [docs/SYSTEM_STACK.md](/Users/j
 | v0.2.0 | Plasma Transport + Toroidal + RF Link + Lagrange |
 | v0.3.0 | ATHENA judgment · examples · CONCEPT_EN |
 | **v0.4.0** | **MRI PATH: Gradient → RF Pulse → Bloch → SNR → SAR** |
+| **v0.5.0** | **Space gate evolution roadmap + TerraCore bridge + self-circulating habitat staging** |
 
 ---
 

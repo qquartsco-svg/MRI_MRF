@@ -1,4 +1,4 @@
-"""Magnetic Resonance Foundation — comprehensive tests (v0.4.0)."""
+"""Magnetic Resonance Foundation — comprehensive tests (v0.5.0)."""
 from __future__ import annotations
 
 import json
@@ -54,9 +54,15 @@ from magnetic_resonance.ecosystem_bridges import (
     try_fabless_semiconductor_bridge,
     try_satellite_gate_bridge,
     try_orbital_gate_bridge,
+    try_terracore_gate_bridge,
 )
 from magnetic_resonance.space_gate_datacenter import screen_space_gate_datacenter
-from magnetic_resonance.contracts import SpaceGateDataCenterInput
+from magnetic_resonance.space_gate_evolution import evaluate_space_gate_evolution
+from magnetic_resonance.contracts import (
+    SpaceGateDataCenterInput,
+    SpaceGateEvolutionInput,
+    SpaceGateEvolutionPhase,
+)
 
 
 # ═══════════════════════════════════════════════════════
@@ -558,8 +564,11 @@ class TestIntegrity:
         "CONCEPT_EN.md",
         "examples/full_scenario.py",
         "examples/space_gate_datacenter_demo.py",
+        "examples/space_gate_evolution_demo.py",
         "examples/README.md",
         "examples/README_EN.md",
+        "docs/SYSTEM_STACK.md",
+        "docs/SPACE_GATE_EVOLUTION_ROADMAP.md",
     ]
 
     def test_files_exist(self):
@@ -615,6 +624,12 @@ class TestEcosystemBridges:
             assert "omega_orb" in out
             assert "drag_health" in out
 
+    def test_terracore_bridge_optional(self):
+        out = try_terracore_gate_bridge(heat_load_w=260.0, crew_count=1, mission_days=10.0, closed_loop=True)
+        if out is not None:
+            assert "omega_terracore" in out
+            assert "closed_loop" in out
+
 
 class TestSpaceGateDataCenter:
     def test_layered_stack_basic(self):
@@ -664,6 +679,50 @@ class TestSpaceGateDataCenter:
             )
         )
         assert r.internal_air_verdict in {"over_temp", "insufficient_flow", "marginal"}
+
+
+class TestSpaceGateEvolution:
+    def test_basic_stage_progression(self):
+        report = evaluate_space_gate_evolution(
+            SpaceGateEvolutionInput(
+                system_name="seed_gate",
+                thermal_omega=0.78,
+                satellite_omega=0.74,
+                orbital_omega=0.69,
+                manufacturing_omega=0.66,
+                resonance_network_omega=0.52,
+                superconducting_omega=0.48,
+                terracore_viability_0_1=0.40,
+                internal_air_enabled=True,
+                closed_loop_life_support_enabled=False,
+            )
+        )
+        assert report.current_phase in {
+            SpaceGateEvolutionPhase.SATELLITE_COMPUTE_NODE,
+            SpaceGateEvolutionPhase.ENCLOSED_COMPUTE_HABITAT,
+        }
+        assert "closed_loop_life_support" in report.bottlenecks
+
+    def test_self_circulating_stage(self):
+        report = evaluate_space_gate_evolution(
+            SpaceGateEvolutionInput(
+                system_name="self_circulating_gate",
+                thermal_omega=0.86,
+                satellite_omega=0.82,
+                orbital_omega=0.79,
+                manufacturing_omega=0.74,
+                resonance_network_omega=0.72,
+                superconducting_omega=0.68,
+                terracore_viability_0_1=0.80,
+                internal_air_enabled=True,
+                closed_loop_life_support_enabled=True,
+            )
+        )
+        assert report.current_phase in {
+            SpaceGateEvolutionPhase.SELF_CIRCULATING_GATE_HABITAT,
+            SpaceGateEvolutionPhase.EARTHLIKE_STARSHIP_CONCEPT,
+        }
+        assert report.phase_scores["self_circulating_gate_habitat"] >= 0.58
 
 
 # ═══════════════════════════════════════════════════════

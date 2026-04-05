@@ -1,5 +1,5 @@
 """
-Magnetic Resonance Foundation CLI  v0.4.0
+Magnetic Resonance Foundation CLI  v0.5.0
 ==========================================
 
 Usage (Gate path):

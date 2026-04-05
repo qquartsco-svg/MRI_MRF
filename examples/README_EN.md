@@ -47,3 +47,21 @@ This demo shows MRF as a higher-level system hub:
 - `MRF -> Superconducting_Magnet_Stack`
 
 For the conceptual frame, see [CONCEPT_EN.md](../CONCEPT_EN.md) (or the Korean [CONCEPT.md](../CONCEPT.md)).
+
+## space_gate_evolution_demo.py
+
+From the repository root:
+
+```bash
+python3 examples/space_gate_evolution_demo.py
+```
+
+This demo combines:
+
+- small satellite data-center screening
+- satellite/orbital readiness
+- manufacturing readiness
+- superconducting field readiness
+- TerraCore-style self-circulation viability
+
+and then conservatively estimates which roadmap stage the concept has reached.

@@ -8,6 +8,7 @@ SpaceThermal      → 복사+대류 병렬 비교
 Optics            → 전자기파/파장 screening
 Foundry           → 공정/테이프아웃 readiness tick
 Manufacturing     → 코일/구조물 제조 readiness
+TerraCore/Satellite → 폐회로 생존성 / 자가순환 해비타트 viability
 
 형제 엔진이 없으면 None으로 조용히 degrade 된다.
 """
@@ -496,6 +497,66 @@ def try_orbital_gate_bridge(
     health_mod = _try_import("OrbitalCore_Engine", "orbital_core.health")
     constants_mod = _try_import("OrbitalCore_Engine", "orbital_core.constants")
     if contracts_mod is None or health_mod is None or constants_mod is None:
+        return None
+
+
+def try_terracore_gate_bridge(
+    *,
+    heat_load_w: float,
+    crew_count: int = 1,
+    mission_days: float = 14.0,
+    closed_loop: bool = True,
+    altitude_km: float = 550.0,
+    data_rate_kbps: float = 5000.0,
+    design_life_years: float = 2.0,
+) -> Optional[Dict[str, Any]]:
+    """MRF gate concept -> Satellite/TerraCore closed-loop habitat bridge."""
+    sat_mod = _try_import("Satellite_Design_Stack", "satellite_design_stack")
+    if sat_mod is None:
+        return None
+    try:
+        mission = sat_mod.SatelliteMission(
+            satellite_class=sat_mod.SatelliteClass.SMALLSAT,
+            orbit_type=sat_mod.OrbitType.LEO,
+            altitude_km=altitude_km,
+            payload_type=sat_mod.PayloadType.EXPERIMENTAL,
+            design_life_years=design_life_years,
+            data_rate_kbps=data_rate_kbps,
+            pointing_req_deg=1.0,
+            power_req_w=max(20.0, heat_load_w * 0.40),
+            mission_label="magnetic_resonance_terracore_gate",
+        )
+        bp, report = sat_mod.SatelliteDesignPipeline().run(mission)
+        adapter = sat_mod.TerraCoreAdapter(
+            crew_count=crew_count,
+            mission_days=mission_days,
+            closed_loop=closed_loop,
+        )
+        hab = adapter.evaluate(bp)
+        score_terms = [
+            1.0 if hab.get("volume_ok") else 0.0,
+            1.0 if hab.get("power_ok") else 0.0,
+            1.0 if hab.get("mass_ok") else 0.0,
+            1.0 if hab.get("terracore_available") else 0.3,
+            1.0 if closed_loop else 0.6,
+        ]
+        omega_terracore = round(sum(score_terms) / len(score_terms), 4)
+        return {
+            "omega_terracore": omega_terracore,
+            "viable": hab.get("viable"),
+            "closed_loop": closed_loop,
+            "crew_count": crew_count,
+            "mission_days": mission_days,
+            "volume_ok": hab.get("volume_ok"),
+            "power_ok": hab.get("power_ok"),
+            "mass_ok": hab.get("mass_ok"),
+            "habitat_volume_m3": hab.get("life_support", {}).get("habitat_volume_m3"),
+            "eclss_power_w": hab.get("life_support", {}).get("eclss_power_w"),
+            "terracore_available": hab.get("terracore_available"),
+            "recommendation": hab.get("recommendation"),
+            "satellite_omega": report.omega,
+        }
+    except Exception:
         return None
     try:
         r_earth = constants_mod.R_EARTH_M

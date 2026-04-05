@@ -84,6 +84,15 @@ class AthenaStage(Enum):
     NEGATIVE = "negative"
 
 
+class SpaceGateEvolutionPhase(Enum):
+    """우주 게이트 데이터센터/우주선 개념의 단계적 진화 상태."""
+    SATELLITE_COMPUTE_NODE = "satellite_compute_node"
+    ENCLOSED_COMPUTE_HABITAT = "enclosed_compute_habitat"
+    RESONANT_ORBITAL_CLUSTER = "resonant_orbital_cluster"
+    SELF_CIRCULATING_GATE_HABITAT = "self_circulating_gate_habitat"
+    EARTHLIKE_STARSHIP_CONCEPT = "earthlike_starship_concept"
+
+
 # ── Layer 1: Larmor / NMR ──────────────────────────────
 
 @dataclass(frozen=True)
@@ -574,3 +583,36 @@ class SpaceGateDataCenterReport:
     recommendation: str
     evidence_tags: List[str] = field(default_factory=list)
     warnings: List[str] = field(default_factory=list)
+
+
+@dataclass(frozen=True)
+class SpaceGateEvolutionInput:
+    """위성형 데이터센터 -> 자가순환 우주선 개념 진화 평가 입력."""
+
+    system_name: str
+    thermal_omega: float
+    satellite_omega: float
+    orbital_omega: float
+    manufacturing_omega: float
+    resonance_network_omega: float = 0.0
+    superconducting_omega: float | None = None
+    terracore_viability_0_1: float | None = None
+    foundry_omega: float | None = None
+    fabless_chain_omega: float | None = None
+    internal_air_enabled: bool = True
+    closed_loop_life_support_enabled: bool = False
+    notes: str = ""
+
+
+@dataclass(frozen=True)
+class SpaceGateEvolutionReport:
+    """우주 게이트 진화 로드맵의 현재 단계와 다음 단계 요약."""
+
+    system_name: str
+    current_phase: SpaceGateEvolutionPhase
+    next_phase: SpaceGateEvolutionPhase | None
+    overall_omega: float
+    phase_scores: Dict[str, float]
+    bottlenecks: List[str]
+    recommendation: str
+    evidence_tags: List[str] = field(default_factory=list)

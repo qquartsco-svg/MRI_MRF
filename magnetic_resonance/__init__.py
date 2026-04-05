@@ -1,5 +1,5 @@
 """
-Magnetic Resonance Foundation  v0.4.0
+Magnetic Resonance Foundation  v0.5.0
 ======================================
 하나의 ω₀ = γ·B₀ 에서 두 경로로.
 
@@ -9,7 +9,7 @@ Gate Path: magnetic_confinement → thermal_transport → plasma_transport → t
 공유 기반 : larmor.py, gate_resonance.py
 통합      : foundation.py
 """
-__version__ = "0.4.0"
+__version__ = "0.5.0"
 
 from .contracts import (
     BlochInput,
@@ -37,6 +37,9 @@ from .contracts import (
     MagneticThermalResult,
     SpaceGateDataCenterInput,
     SpaceGateDataCenterReport,
+    SpaceGateEvolutionInput,
+    SpaceGateEvolutionPhase,
+    SpaceGateEvolutionReport,
     PlasmaTransportInput,
     PlasmaTransportResult,
     ReadinessVerdict,
@@ -79,6 +82,7 @@ from .mri_screening import screen_mri
 from .foundation import analyze
 from .athena_stage import map_athena_stage
 from .space_gate_datacenter import screen_space_gate_datacenter
+from .space_gate_evolution import evaluate_space_gate_evolution
 from .ecosystem_bridges import (
     resonance_to_em_snapshot,
     try_frequency_resonance,
@@ -89,6 +93,7 @@ from .ecosystem_bridges import (
     try_manufacturing_resonance_readiness,
     try_satellite_gate_bridge,
     try_orbital_gate_bridge,
+    try_terracore_gate_bridge,
     mri_to_manufacturing_payload,
     gate_to_manufacturing_payload,
     try_mri_manufacturing_readiness,
@@ -150,6 +155,7 @@ __all__ = [
     "try_manufacturing_resonance_readiness",
     "try_satellite_gate_bridge",
     "try_orbital_gate_bridge",
+    "try_terracore_gate_bridge",
     "mri_to_manufacturing_payload",
     "gate_to_manufacturing_payload",
     "try_mri_manufacturing_readiness",
@@ -171,6 +177,10 @@ __all__ = [
     "SpaceGateDataCenterInput",
     "SpaceGateDataCenterReport",
     "screen_space_gate_datacenter",
+    "SpaceGateEvolutionInput",
+    "SpaceGateEvolutionPhase",
+    "SpaceGateEvolutionReport",
+    "evaluate_space_gate_evolution",
     "ResonanceMatchState",
     "RFTransferInput",
     "RFTransferResult",
