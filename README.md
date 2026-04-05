@@ -6,7 +6,7 @@
 | 항목 | 내용 |
 |------|------|
 | 버전 | `v0.4.0` |
-| 테스트 | `92 passed` |
+| 테스트 | `97 passed` |
 | 의존성 | 런타임: 표준 라이브러리만 · 테스트: `pytest>=8.0` (선택) |
 | 패키지명 | `magnetic-resonance-foundation` |
 | Python | `>=3.10` |
@@ -291,7 +291,7 @@ python3 scripts/verify_package_identity.py
 python3 scripts/release_check.py
 ```
 
-`SIGNATURE.sha256`은 릴리스 시점 40개 파일의 SHA-256을 기록합니다. 코드 변조 여부와 문서·코드·테스트 동기화를 추적합니다. 상세: [BLOCKCHAIN_INFO.md](BLOCKCHAIN_INFO.md)
+`SIGNATURE.sha256`은 릴리스 시점 파일들의 SHA-256을 기록합니다. 코드 변조 여부와 문서·코드·테스트 동기화를 추적합니다. 상세: [BLOCKCHAIN_INFO.md](BLOCKCHAIN_INFO.md)
 
 ---
 
@@ -301,7 +301,7 @@ python3 scripts/release_check.py
 python3 -m pytest tests/ -q
 ```
 
-현재: **92 passed** (v0.4.0) — Larmor · Gate resonance · Confinement · Thermal · Plasma · Toroidal · RF link · Lagrange · Gradient · RF pulse · Bloch · SNR · SAR · MRI screening · Foundation MRI · CLI · Integrity
+현재: **97 passed** (v0.4.0) — Larmor · Gate resonance · Confinement · Thermal · Plasma · Toroidal · RF link · Lagrange · Gradient · RF pulse · Bloch · SNR · SAR · MRI screening · Foundation MRI · Ecosystem bridges · CLI · Integrity
 
 ---
 
@@ -312,8 +312,30 @@ python3 -m pytest tests/ -q
 | `FrequencyCore_Engine` | 공명 응답 함수 재사용 |
 | `Superconducting_Magnet_Stack` | 강자기장 코일 설계 파라미터 |
 | `Space_Thermal_Dynamics_Foundation` | 복사 열관리 vs 자기 기반 열운반 비교 |
+| `Optics_Foundation` | 라모어 주파수 → 파장 snapshot → 광학 screening |
+| `Manufacturing_Translation_Foundation` | 코일/구조물 제조 readiness handoff |
+| `Foundry_Implementation_Engine` | 공정/signoff readiness tick |
+| `Fabless-style semiconductor flow` | MTF adapter를 통한 간접 semiconductor chain 연결 |
 
 형제 엔진이 없으면 `None`으로 degrade되고, core는 독립 실행됩니다.
+
+### Factory 계열 handoff
+
+MRF가 Factory 계열에 실제로 연결되는 방식은 두 갈래입니다.
+
+1. `MRI PATH -> MTF`
+- RF coil, gradient housing, cryogenic or magnetic module 같은 의료/계측 장비형 부품을
+  제조 payload로 내립니다.
+- 그 payload는 `Manufacturing_Translation_Foundation`에서 공정, BOM, 공차, 조립, 테스트,
+  `omega_mfg`, `athena_stage`, `verdict`로 다시 번역됩니다.
+
+2. `GATE PATH -> MTF / Foundry / Fabless-style flow`
+- 코일, 차폐, 진공 구조물, 프레임 같은 개념 장치를 시제품/공정 readiness 언어로 내립니다.
+- `Foundry_Implementation_Engine`에는 공정/signoff tick으로,
+  `fabless-style semiconductor flow`에는 MTF adapter 경유 chain screening으로 전달됩니다.
+
+즉 이 저장소는 자기공명 개념을 여기서 끝내지 않고,
+**코일·RF·차폐·구조물을 실제 제조와 공정 언어로 내리는 입구**까지 포함합니다.
 
 ---
 

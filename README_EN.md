@@ -6,7 +6,7 @@
 | Item | Details |
 |------|---------|
 | Version | `v0.4.0` |
-| Tests | `92 passed` |
+| Tests | `97 passed` |
 | Deps | Runtime: stdlib only · Test: `pytest>=8.0` (optional) |
 | Package | `magnetic-resonance-foundation` |
 | Python | `>=3.10` |
@@ -270,15 +270,44 @@ python3 scripts/generate_signature.py   # SHA-256 sign
 python3 scripts/verify_signature.py     # verify
 ```
 
-`SIGNATURE.sha256` records SHA-256 of all 40 source files to detect tampering and track doc/code/test synchronization. See [BLOCKCHAIN_INFO_EN.md](BLOCKCHAIN_INFO_EN.md).
+`SIGNATURE.sha256` records SHA-256 of the release files to detect tampering and track doc/code/test synchronization. See [BLOCKCHAIN_INFO_EN.md](BLOCKCHAIN_INFO_EN.md).
 
 ---
 
 ## Tests
 
 ```bash
-python3 -m pytest tests/ -q    # 92 passed (v0.4.0)
+python3 -m pytest tests/ -q    # 97 passed (v0.4.0)
 ```
+
+## Sibling Engine Bridges
+
+- `FrequencyCore_Engine` — resonance response reuse
+- `Space_Thermal_Dynamics_Foundation` — radiation vs magnetic transport proxy
+- `Optics_Foundation` — Larmor frequency → wavelength snapshot → optics screening
+- `Manufacturing_Translation_Foundation` — coil/structure manufacturing readiness handoff
+- `Foundry_Implementation_Engine` — process/signoff readiness tick
+- `Fabless-style semiconductor flow` — indirect semiconductor-chain bridge via MTF adapters
+
+### Factory handoff
+
+MRF connects to factory-facing engines through two practical routes.
+
+1. `MRI PATH -> MTF`
+- RF coils, gradient housings, cryogenic or magnetic modules are lowered into
+  manufacturing payloads.
+- `Manufacturing_Translation_Foundation` then turns them into process, BOM,
+  tolerance, assembly, test, `omega_mfg`, `athena_stage`, and `verdict`.
+
+2. `GATE PATH -> MTF / Foundry / Fabless-style semiconductor flow`
+- Coils, shielding, vacuum structures, and frames are lowered into prototype or
+  process-readiness payloads.
+- Those payloads can be screened by MTF, sent to foundry/signoff ticks, or
+  passed through an indirect fabless-style semiconductor chain.
+
+This means MRF does not stop at conceptual resonance analysis; it also provides
+an entry path for turning coils, RF subsystems, shielding, and structural parts
+into manufacturing language.
 
 ---
 

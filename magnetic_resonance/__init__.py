@@ -76,6 +76,20 @@ from .sar_safety import screen_sar
 from .mri_screening import screen_mri
 from .foundation import analyze
 from .athena_stage import map_athena_stage
+from .ecosystem_bridges import (
+    resonance_to_em_snapshot,
+    try_frequency_resonance,
+    try_superconducting_field,
+    try_space_thermal_screen,
+    try_optics_resonance_bridge,
+    try_foundry_resonance_tick,
+    try_manufacturing_resonance_readiness,
+    mri_to_manufacturing_payload,
+    gate_to_manufacturing_payload,
+    try_mri_manufacturing_readiness,
+    try_gate_manufacturing_readiness,
+    try_fabless_semiconductor_bridge,
+)
 
 __all__ = [
     "analyze",
@@ -122,6 +136,18 @@ __all__ = [
     "screen_snr",
     "screen_sar",
     "screen_mri",
+    "resonance_to_em_snapshot",
+    "try_frequency_resonance",
+    "try_superconducting_field",
+    "try_space_thermal_screen",
+    "try_optics_resonance_bridge",
+    "try_foundry_resonance_tick",
+    "try_manufacturing_resonance_readiness",
+    "mri_to_manufacturing_payload",
+    "gate_to_manufacturing_payload",
+    "try_mri_manufacturing_readiness",
+    "try_gate_manufacturing_readiness",
+    "try_fabless_semiconductor_bridge",
     "GradientInput",
     "GradientResult",
     "RFPulseInput",

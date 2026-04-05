@@ -46,6 +46,13 @@ from magnetic_resonance.gate_topology import (
     preset_earth_moon_relay,
 )
 from magnetic_resonance.foundation import analyze
+from magnetic_resonance.ecosystem_bridges import (
+    resonance_to_em_snapshot,
+    try_optics_resonance_bridge,
+    try_foundry_resonance_tick,
+    try_manufacturing_resonance_readiness,
+    try_fabless_semiconductor_bridge,
+)
 
 
 # ═══════════════════════════════════════════════════════
@@ -543,6 +550,42 @@ class TestIntegrity:
         root = os.path.join(os.path.dirname(__file__), "..")
         for f in self.REQUIRED:
             assert os.path.isfile(os.path.join(root, f)), f"Missing: {f}"
+
+
+# ═══════════════════════════════════════════════════════
+# 13. Ecosystem Bridges
+# ═══════════════════════════════════════════════════════
+
+class TestEcosystemBridges:
+    def test_resonance_snapshot(self):
+        snap = resonance_to_em_snapshot(3.0, nucleus="1H")
+        assert snap["frequency_mhz"] > 100
+        assert snap["wavelength_m"] > 0
+        assert "regime" in snap
+
+    def test_optics_bridge_optional(self):
+        out = try_optics_resonance_bridge(3.0, "1H")
+        if out is not None:
+            assert "omega_optics" in out
+            assert "verdict" in out
+
+    def test_foundry_bridge_optional(self):
+        out = try_foundry_resonance_tick(3.0, "1H")
+        if out is not None:
+            assert "omega_foundry" in out
+            assert "stage" in out
+
+    def test_manufacturing_bridge_optional(self):
+        out = try_manufacturing_resonance_readiness(3.0, "1H")
+        if out is not None:
+            assert "omega_mfg" in out
+            assert "verdict" in out
+
+    def test_fabless_bridge_optional(self):
+        out = try_fabless_semiconductor_bridge(3.0, "1H")
+        if out is not None:
+            assert "omega_semiconductor_chain" in out
+            assert "athena_stage" in out
 
 
 # ═══════════════════════════════════════════════════════
