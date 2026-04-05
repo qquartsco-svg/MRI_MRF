@@ -18,6 +18,7 @@ REQUIRED = [
     "magnetic_resonance/__init__.py",
     "magnetic_resonance/contracts.py",
     "magnetic_resonance/foundation.py",
+    "magnetic_resonance/space_gate_datacenter.py",
     "magnetic_resonance/athena_stage.py",
     "scripts/generate_signature.py",
     "scripts/verify_signature.py",

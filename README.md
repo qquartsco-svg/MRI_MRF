@@ -6,7 +6,7 @@
 | 항목 | 내용 |
 |------|------|
 | 버전 | `v0.4.0` |
-| 테스트 | `97 passed` |
+| 테스트 | `103 passed` |
 | 의존성 | 런타임: 표준 라이브러리만 · 테스트: `pytest>=8.0` (선택) |
 | 패키지명 | `magnetic-resonance-foundation` |
 | Python | `>=3.10` |
@@ -108,6 +108,7 @@ magnetic_resonance/
 ├── ── INTEGRATION ────────────────────────────────
 ├── foundation.py           통합 analyze()
 ├── athena_stage.py         ATHENA 판정
+├── space_gate_datacenter.py 우주 게이트 데이터센터 열 스택
 ├── ecosystem_bridges.py    형제 엔진 연결
 ├── cli.py                  CLI
 └── __init__.py
@@ -301,7 +302,7 @@ python3 scripts/release_check.py
 python3 -m pytest tests/ -q
 ```
 
-현재: **97 passed** (v0.4.0) — Larmor · Gate resonance · Confinement · Thermal · Plasma · Toroidal · RF link · Lagrange · Gradient · RF pulse · Bloch · SNR · SAR · MRI screening · Foundation MRI · Ecosystem bridges · CLI · Integrity
+현재: **103 passed** (v0.4.0) — Larmor · Gate resonance · Confinement · Thermal · Plasma · Toroidal · RF link · Lagrange · Gradient · RF pulse · Bloch · SNR · SAR · MRI screening · Foundation MRI · Ecosystem bridges · Space gate datacenter stack · Satellite bridge · Orbital bridge · CLI · Integrity
 
 ---
 
@@ -313,6 +314,8 @@ python3 -m pytest tests/ -q
 | `Superconducting_Magnet_Stack` | 강자기장 코일 설계 파라미터 |
 | `Space_Thermal_Dynamics_Foundation` | 복사 열관리 vs 자기 기반 열운반 비교 |
 | `Optics_Foundation` | 라모어 주파수 → 파장 snapshot → 광학 screening |
+| `Satellite_Design_Stack` | 게이트 하드웨어를 위성 payload mission으로 투영해 readiness 확인 |
+| `OrbitalCore_Engine` | 게이트/노드 배치를 궤도 건강도 `omega_orb`로 스크리닝 |
 | `Manufacturing_Translation_Foundation` | 코일/구조물 제조 readiness handoff |
 | `Foundry_Implementation_Engine` | 공정/signoff readiness tick |
 | `Fabless-style semiconductor flow` | MTF adapter를 통한 간접 semiconductor chain 연결 |
@@ -336,6 +339,88 @@ MRF가 Factory 계열에 실제로 연결되는 방식은 두 갈래입니다.
 
 즉 이 저장소는 자기공명 개념을 여기서 끝내지 않고,
 **코일·RF·차폐·구조물을 실제 제조와 공정 언어로 내리는 입구**까지 포함합니다.
+
+## 우주 게이트 데이터센터 열 스택
+
+우주 게이트 자체를 데이터센터처럼 쓰려면, 냉각은 세 층으로 나눠 읽어야 합니다.
+
+1. `internal_air`
+- 내부 밀폐 대기/가스를 돌리는 공냉/강제대류 층
+- `Space_Thermal_Dynamics_Foundation`의 `terrestrial_convection` 경로 재사용
+
+2. `magnetic_assist`
+- 자기공명/플라즈마/전자기 루프를 통한 보조 수송층
+- 일반 공기를 직접 돌리는 주 냉각기가 아니라 **보조층**으로만 사용
+
+3. `external_radiator`
+- 최종적으로 우주 바깥으로 열을 버리는 복사 층
+- `Space_Thermal_Dynamics_Foundation.run_foundation()` 재사용
+
+즉 구조는 다음과 같습니다.
+
+```text
+compute heat
+-> internal air convection
+-> magnetic auxiliary transport (optional)
+-> external radiator
+-> space radiation sink
+```
+
+이 설계는 “MRI 식 회전이 공기를 직접 냉각한다”는 과장을 피하고,
+**공냉은 내부층, 자기공명은 보조층, 복사는 최종층**으로 역할을 고정합니다.
+
+### 사용 예시
+
+```python
+from magnetic_resonance import SpaceGateDataCenterInput, screen_space_gate_datacenter
+
+report = screen_space_gate_datacenter(
+    SpaceGateDataCenterInput(
+        gate_name="orbital_gate_dc_alpha",
+        compute_heat_load_w=1200.0,
+        radiator_area_m2=8.0,
+        internal_air_supply_temp_c=20.0,
+        internal_air_exhaust_limit_c=38.0,
+        internal_air_volumetric_flow_m3_s=1.2,
+        field_t=3.0,
+        magnetic_assist_enabled=True,
+        magnetic_assist_fraction_0_1=0.15,
+    )
+)
+```
+
+핵심 출력:
+- `internal_air_omega`
+- `external_radiator_omega`
+- `magnetic_assist_omega`
+- `overall_omega`
+- `bottleneck_layer`
+- `athena_stage`
+- `verdict`
+
+## 새틀라이트 / 오비탈 연결
+
+현재 MRF는 위성/오비탈 쪽과도 **직접 브리지**를 가집니다.
+
+1. `try_satellite_gate_bridge(...)`
+- 게이트 하드웨어나 자기공명 payload를 `Satellite_Design_Stack`의 mission/pipeline 언어로 투영합니다.
+- 반환 예:
+  - `omega_satellite`
+  - `verdict`
+  - `thermal_hot_case_c`
+  - `link_margin_db`
+
+2. `try_orbital_gate_bridge(...)`
+- 게이트 노드나 우주 데이터센터 배치를 `OrbitalCore_Engine`의 궤도 건강도 언어로 투영합니다.
+- 반환 예:
+  - `omega_orb`
+  - `drag_health`
+  - `maneuver_budget_health`
+  - `anomaly_notes`
+
+즉 MRF는 이제
+**공명/자기장 개념 -> 위성 탑재체 readiness -> 궤도 건강도 -> 제조/공정 handoff**
+까지 한 줄로 이어질 수 있습니다.
 
 ---
 

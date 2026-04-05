@@ -27,4 +27,20 @@ python3 examples/factory_handoff_demo.py
 - `Gate PATH -> Foundry`
 - `Gate PATH -> fabless-style semiconductor chain`
 
+## space_gate_datacenter_demo.py
+
+저장소 루트에서 실행:
+
+```bash
+python3 examples/space_gate_datacenter_demo.py
+```
+
+이 예제는 우주 게이트 자체를 내부 대기 순환형 데이터센터로 보고,
+
+- 내부 공냉/대류
+- 자기공명 보조 열수송
+- 외부 라디에이터 복사
+
+를 **서로 섞지 않고 층별로** 스크리닝하는 데모입니다.
+
 개념 배경은 상위 디렉터리 [CONCEPT.md](../CONCEPT.md)를 참고하세요.

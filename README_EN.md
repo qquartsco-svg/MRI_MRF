@@ -6,7 +6,7 @@
 | Item | Details |
 |------|---------|
 | Version | `v0.4.0` |
-| Tests | `97 passed` |
+| Tests | `103 passed` |
 | Deps | Runtime: stdlib only · Test: `pytest>=8.0` (optional) |
 | Package | `magnetic-resonance-foundation` |
 | Python | `>=3.10` |
@@ -108,6 +108,7 @@ magnetic_resonance/
 ├── ── INTEGRATION ────────────────────────────────
 ├── foundation.py           Unified analyze()
 ├── athena_stage.py         ATHENA judgment
+├── space_gate_datacenter.py Space gate data center thermal stack
 ├── ecosystem_bridges.py    Sibling engine bridges
 ├── cli.py                  CLI entry point
 └── __init__.py
@@ -277,7 +278,7 @@ python3 scripts/verify_signature.py     # verify
 ## Tests
 
 ```bash
-python3 -m pytest tests/ -q    # 97 passed (v0.4.0)
+python3 -m pytest tests/ -q    # 103 passed (v0.4.0)
 ```
 
 ## Sibling Engine Bridges
@@ -285,6 +286,8 @@ python3 -m pytest tests/ -q    # 97 passed (v0.4.0)
 - `FrequencyCore_Engine` — resonance response reuse
 - `Space_Thermal_Dynamics_Foundation` — radiation vs magnetic transport proxy
 - `Optics_Foundation` — Larmor frequency → wavelength snapshot → optics screening
+- `Satellite_Design_Stack` — project gate hardware into a satellite payload mission and readiness report
+- `OrbitalCore_Engine` — project gate/node placement into orbital health language (`omega_orb`)
 - `Manufacturing_Translation_Foundation` — coil/structure manufacturing readiness handoff
 - `Foundry_Implementation_Engine` — process/signoff readiness tick
 - `Fabless-style semiconductor flow` — indirect semiconductor-chain bridge via MTF adapters
@@ -308,6 +311,78 @@ MRF connects to factory-facing engines through two practical routes.
 This means MRF does not stop at conceptual resonance analysis; it also provides
 an entry path for turning coils, RF subsystems, shielding, and structural parts
 into manufacturing language.
+
+## Space gate data center thermal stack
+
+If the gate itself is used as a data-center-like structure, cooling should be read as three separate layers.
+
+1. `internal_air`
+- enclosed-atmosphere forced-air path
+- reuses `Space_Thermal_Dynamics_Foundation.terrestrial_convection`
+
+2. `magnetic_assist`
+- auxiliary transport through resonance/plasma/electromagnetic loops
+- not the primary mechanism that directly drives ordinary air cooling
+
+3. `external_radiator`
+- final vacuum-side radiator rejection path
+- reuses `Space_Thermal_Dynamics_Foundation.run_foundation()`
+
+The stack is therefore:
+
+```text
+compute heat
+-> internal air convection
+-> magnetic auxiliary transport (optional)
+-> external radiator
+-> space radiation sink
+```
+
+This avoids the overclaim that “MRI-like rotation directly cools the air,” and fixes the roles more honestly:
+**air cooling is internal, magnetic resonance is auxiliary, radiation is final**.
+
+### Example
+
+```python
+from magnetic_resonance import SpaceGateDataCenterInput, screen_space_gate_datacenter
+
+report = screen_space_gate_datacenter(
+    SpaceGateDataCenterInput(
+        gate_name="orbital_gate_dc_alpha",
+        compute_heat_load_w=1200.0,
+        radiator_area_m2=8.0,
+        internal_air_supply_temp_c=20.0,
+        internal_air_exhaust_limit_c=38.0,
+        internal_air_volumetric_flow_m3_s=1.2,
+        field_t=3.0,
+        magnetic_assist_enabled=True,
+        magnetic_assist_fraction_0_1=0.15,
+    )
+)
+```
+
+## Satellite / orbital integration
+
+MRF now also has direct bridges into satellite and orbital engines.
+
+1. `try_satellite_gate_bridge(...)`
+- projects a gate or magnetic-resonance hardware concept into the `Satellite_Design_Stack` mission/pipeline language
+- returns fields such as:
+  - `omega_satellite`
+  - `verdict`
+  - `thermal_hot_case_c`
+  - `link_margin_db`
+
+2. `try_orbital_gate_bridge(...)`
+- projects a gate node or orbital compute placement into `OrbitalCore_Engine` health language
+- returns fields such as:
+  - `omega_orb`
+  - `drag_health`
+  - `maneuver_budget_health`
+  - `anomaly_notes`
+
+So the repository can now connect:
+**resonance / magnetic concepts -> satellite payload readiness -> orbital health -> manufacturing and process handoff**.
 
 ---
 

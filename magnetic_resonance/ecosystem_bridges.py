@@ -14,6 +14,7 @@ Manufacturing     → 코일/구조물 제조 readiness
 from __future__ import annotations
 
 import importlib
+import math
 import os
 import sys
 from typing import Any, Dict, Optional
@@ -28,9 +29,8 @@ def _try_import(package_dir: str, module_path: str) -> Optional[Any]:
     pkg = os.path.join(_STAGING, package_dir)
     if not os.path.isdir(pkg):
         return None
-    parent = os.path.dirname(pkg)
-    if parent not in sys.path:
-        sys.path.insert(0, parent)
+    if pkg not in sys.path:
+        sys.path.insert(0, pkg)
     try:
         return importlib.import_module(module_path)
     except Exception:
@@ -410,6 +410,99 @@ def try_fabless_semiconductor_bridge(
             "verdict": report.verdict.value,
             "athena_stage": report.athena_stage.value,
             "target_node_nm": target_node_nm,
+        }
+    except Exception:
+        return None
+
+
+def try_satellite_gate_bridge(
+    *,
+    heat_load_w: float,
+    data_rate_kbps: float = 5000.0,
+    altitude_km: float = 550.0,
+    design_life_years: float = 2.0,
+) -> Optional[Dict[str, Any]]:
+    """Magnetic Resonance → Satellite_Design_Stack readiness bridge."""
+    sat_mod = _try_import("Satellite_Design_Stack", "satellite_design_stack")
+    if sat_mod is None:
+        return None
+    try:
+        mission = sat_mod.SatelliteMission(
+            satellite_class=sat_mod.SatelliteClass.SMALLSAT,
+            orbit_type=sat_mod.OrbitType.LEO,
+            altitude_km=altitude_km,
+            payload_type=sat_mod.PayloadType.EXPERIMENTAL,
+            design_life_years=design_life_years,
+            data_rate_kbps=data_rate_kbps,
+            pointing_req_deg=1.0,
+            power_req_w=max(5.0, heat_load_w * 0.35),
+            mission_label="magnetic_resonance_gate_payload",
+        )
+        bp, report = sat_mod.SatelliteDesignPipeline().run(mission)
+        return {
+            "omega_satellite": report.omega,
+            "verdict": report.verdict.value,
+            "satellite_class": bp.satellite_class.value,
+            "orbit_type": bp.orbit.orbit_type.value,
+            "thermal_hot_case_c": bp.thermal.hot_case_temp_c if bp.thermal else None,
+            "thermal_cold_case_c": bp.thermal.cold_case_temp_c if bp.thermal else None,
+            "link_margin_db": bp.link.link_margin_db,
+        }
+    except Exception:
+        return None
+
+
+def try_orbital_gate_bridge(
+    *,
+    altitude_km: float = 550.0,
+    eccentricity: float = 0.001,
+    inclination_deg: float = 97.6,
+    delta_v_remaining_ms: float = 120.0,
+    mass_kg: float = 180.0,
+    area_m2: float = 2.5,
+) -> Optional[Dict[str, Any]]:
+    """Magnetic Resonance → OrbitalCore_Engine health bridge."""
+    contracts_mod = _try_import("OrbitalCore_Engine", "orbital_core.contracts")
+    health_mod = _try_import("OrbitalCore_Engine", "orbital_core.health")
+    constants_mod = _try_import("OrbitalCore_Engine", "orbital_core.constants")
+    if contracts_mod is None or health_mod is None or constants_mod is None:
+        return None
+    try:
+        r_earth = constants_mod.R_EARTH_M
+        mu = constants_mod.MU_EARTH
+        a = r_earth + altitude_km * 1000.0
+        period_s = 2.0 * math.pi * math.sqrt((a ** 3) / mu)
+        v_circ = math.sqrt(mu / a)
+        elements = contracts_mod.OrbitalElements(
+            semi_major_axis_m=a,
+            eccentricity=eccentricity,
+            inclination_rad=math.radians(inclination_deg),
+            raan_rad=0.0,
+            arg_of_perigee_rad=0.0,
+            mean_anomaly_rad=0.0,
+        )
+        state = contracts_mod.OrbitalState(
+            elements=elements,
+            pos_eci_m=(a, 0.0, 0.0),
+            vel_eci_ms=(0.0, v_circ, 0.0),
+            altitude_m=altitude_km * 1000.0,
+            period_s=period_s,
+            orbit_type="LEO",
+            time_s=0.0,
+        )
+        oh = health_mod.observe_orbital_health(
+            state,
+            mass_kg=mass_kg,
+            area_m2=area_m2,
+            delta_v_remaining_ms=delta_v_remaining_ms,
+        )
+        return {
+            "omega_orb": oh.omega_orb,
+            "anomaly_detected": oh.anomaly_detected,
+            "anomaly_notes": list(oh.anomaly_notes),
+            "altitude_health": oh.altitude_health,
+            "drag_health": oh.drag_health,
+            "maneuver_budget_health": oh.maneuver_budget_health,
         }
     except Exception:
         return None

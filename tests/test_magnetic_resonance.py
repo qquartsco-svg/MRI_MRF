@@ -52,7 +52,11 @@ from magnetic_resonance.ecosystem_bridges import (
     try_foundry_resonance_tick,
     try_manufacturing_resonance_readiness,
     try_fabless_semiconductor_bridge,
+    try_satellite_gate_bridge,
+    try_orbital_gate_bridge,
 )
+from magnetic_resonance.space_gate_datacenter import screen_space_gate_datacenter
+from magnetic_resonance.contracts import SpaceGateDataCenterInput
 
 
 # ═══════════════════════════════════════════════════════
@@ -505,6 +509,16 @@ class TestExamples:
         assert "omega_overall" in result.stdout
         assert "athena_stage" in result.stdout
 
+    def test_space_gate_datacenter_demo_runs(self):
+        result = subprocess.run(
+            [sys.executable, "examples/space_gate_datacenter_demo.py"],
+            cwd=self._ROOT,
+            capture_output=True,
+            text=True,
+        )
+        assert result.returncode == 0, result.stderr
+        assert "bottleneck_layer" in result.stdout
+
 
 # ═══════════════════════════════════════════════════════
 # 13. Integrity
@@ -524,6 +538,7 @@ class TestIntegrity:
         "magnetic_resonance/rf_energy_transfer.py",
         "magnetic_resonance/lagrange_stability.py",
         "magnetic_resonance/foundation.py",
+        "magnetic_resonance/space_gate_datacenter.py",
         "magnetic_resonance/ecosystem_bridges.py",
         "magnetic_resonance/athena_stage.py",
         "magnetic_resonance/cli.py",
@@ -542,6 +557,7 @@ class TestIntegrity:
         "scripts/release_check.py",
         "CONCEPT_EN.md",
         "examples/full_scenario.py",
+        "examples/space_gate_datacenter_demo.py",
         "examples/README.md",
         "examples/README_EN.md",
     ]
@@ -586,6 +602,68 @@ class TestEcosystemBridges:
         if out is not None:
             assert "omega_semiconductor_chain" in out
             assert "athena_stage" in out
+
+    def test_satellite_bridge_optional(self):
+        out = try_satellite_gate_bridge(heat_load_w=300.0)
+        if out is not None:
+            assert "omega_satellite" in out
+            assert "verdict" in out
+
+    def test_orbital_bridge_optional(self):
+        out = try_orbital_gate_bridge(altitude_km=550.0)
+        if out is not None:
+            assert "omega_orb" in out
+            assert "drag_health" in out
+
+
+class TestSpaceGateDataCenter:
+    def test_layered_stack_basic(self):
+        r = screen_space_gate_datacenter(
+            SpaceGateDataCenterInput(
+                gate_name="orbital_gate_dc_alpha",
+                compute_heat_load_w=1200.0,
+                radiator_area_m2=8.0,
+                internal_air_supply_temp_c=20.0,
+                internal_air_exhaust_limit_c=38.0,
+                internal_air_volumetric_flow_m3_s=1.2,
+                field_t=3.0,
+                magnetic_assist_enabled=True,
+                magnetic_assist_fraction_0_1=0.15,
+            )
+        )
+        assert 0 <= r.internal_air_omega <= 1
+        assert 0 <= r.external_radiator_omega <= 1
+        assert r.bottleneck_layer in {"internal_air", "external_radiator", "magnetic_assist"}
+        assert r.athena_stage.value in {"positive", "neutral", "cautious", "negative"}
+
+    def test_no_magnetic_assist(self):
+        r = screen_space_gate_datacenter(
+            SpaceGateDataCenterInput(
+                gate_name="orbital_gate_dc_beta",
+                compute_heat_load_w=600.0,
+                radiator_area_m2=5.0,
+                internal_air_supply_temp_c=18.0,
+                internal_air_exhaust_limit_c=32.0,
+                internal_air_mass_flow_kg_s=0.6,
+                magnetic_assist_enabled=False,
+            )
+        )
+        assert r.magnetic_assist_omega is None
+        assert r.magnetic_assist_fraction_0_1 == 0.0
+
+    def test_internal_air_can_bottleneck(self):
+        r = screen_space_gate_datacenter(
+            SpaceGateDataCenterInput(
+                gate_name="orbital_gate_dc_gamma",
+                compute_heat_load_w=4000.0,
+                radiator_area_m2=20.0,
+                internal_air_supply_temp_c=22.0,
+                internal_air_exhaust_limit_c=30.0,
+                internal_air_volumetric_flow_m3_s=0.2,
+                magnetic_assist_enabled=False,
+            )
+        )
+        assert r.internal_air_verdict in {"over_temp", "insufficient_flow", "marginal"}
 
 
 # ═══════════════════════════════════════════════════════

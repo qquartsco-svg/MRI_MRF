@@ -98,6 +98,10 @@ Master
   - 복사 열관리와 자기 기반 열운반 proxy 비교
 - `Optics_Foundation`
   - 공명 주파수를 전자기파/파장 snapshot으로 투영
+- `Satellite_Design_Stack`
+  - 게이트 하드웨어/탑재체를 위성 mission/readiness 언어로 투영
+- `OrbitalCore_Engine`
+  - 게이트 노드 배치를 `omega_orb` 건강도 언어로 투영
 - `Manufacturing_Translation_Foundation`
   - 코일/구조물 제조 readiness handoff
 - `Foundry_Implementation_Engine`
@@ -109,6 +113,40 @@ Master
   - MTF의 `fabless_adapter`를 통해 간접 연결
 
 즉 이 저장소는 **물리 코어, 의료 장비 스크리닝, 우주 개념층, 제조/공정 handoff 사이의 완충층** 입니다.
+
+## 우주 게이트 데이터센터 열 스택
+
+우주 게이트 자체를 데이터센터처럼 쓰려면, 열 문제는 한 식으로 뭉개면 안 됩니다.
+
+### Layer 1 — 내부 대기 대류
+
+- 게이트 내부를 밀폐된 대기/가스 환경으로 본다
+- 서버/NPU 발열은 공기 순환과 열교환기로 먼저 모은다
+- 이 층은 `Space_Thermal_Dynamics_Foundation`의 `terrestrial_convection` 경로를 재사용한다
+
+### Layer 2 — 자기공명 보조 열수송
+
+- 자기공명은 일반 공기를 직접 돌리는 주 냉각기가 아니다
+- 대신 코일/플라즈마/전자기 루프를 통한 **보조 수송층**으로만 취급한다
+- 이 층은 `thermal_transport.py`의 proxy를 보수적으로 사용한다
+
+### Layer 3 — 외부 우주 복사
+
+- 최종적으로 우주 바깥으로 나가는 열은 라디에이터 복사뿐이다
+- 이 층은 `Space_Thermal_Dynamics_Foundation`의 `run_foundation()` 복사 경로를 재사용한다
+
+즉 구조는 다음과 같습니다.
+
+```text
+compute heat
+-> internal air convection
+-> magnetic auxiliary transport (optional)
+-> external radiator
+-> space radiation sink
+```
+
+이 분리 원칙은 “MRI식 회전이 공기를 직접 냉각한다”는 과장을 피하고,
+**자기공명은 보조층, 공냉은 내부층, 복사는 최종층**으로 역할을 고정합니다.
 
 ## 결론
 

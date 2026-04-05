@@ -518,3 +518,59 @@ class MagneticResonanceReport:
     verdict: ReadinessVerdict = ReadinessVerdict.NOT_READY
     evidence_tags: List[str] = field(default_factory=list)
     warnings: List[str] = field(default_factory=list)
+
+
+# ── Space Gate Data Center Thermal Stack ──────────────
+
+@dataclass(frozen=True)
+class SpaceGateDataCenterInput:
+    """우주 게이트 내부 데이터센터 열 스택 입력.
+
+    레이어 분리 원칙:
+    - 내부 공냉/대류: SpaceThermal terrestrial_convection
+    - 중간 자기공명 보조: MagneticThermal proxy
+    - 외부 우주 방열: SpaceThermal radiation/orbital path
+    """
+
+    gate_name: str
+    compute_heat_load_w: float
+    radiator_area_m2: float
+    internal_air_supply_temp_c: float
+    internal_air_exhaust_limit_c: float
+    internal_air_mass_flow_kg_s: float | None = None
+    internal_air_volumetric_flow_m3_s: float | None = None
+    internal_heat_transfer_coeff_w_m2k: float | None = None
+    internal_convection_area_m2: float | None = None
+    field_t: float = 3.0
+    magnetic_assist_fraction_0_1: float = 0.15
+    magnetic_assist_enabled: bool = True
+    emissivity: float = 0.85
+    absorptivity: float = 0.18
+    max_operating_temp_c: float = 50.0
+    min_operating_temp_c: float = -20.0
+    thermal_mass_j_per_k: float | None = None
+    notes: str = ""
+
+
+@dataclass(frozen=True)
+class SpaceGateDataCenterReport:
+    """우주 게이트 데이터센터 열 스택 요약 보고서."""
+
+    gate_name: str
+    internal_air_omega: float
+    internal_air_verdict: str
+    internal_air_outlet_temp_c: float
+    external_radiator_omega: float
+    external_radiator_verdict: str
+    equilibrium_temp_c: float
+    magnetic_assist_omega: float | None
+    magnetic_assist_fraction_0_1: float
+    heat_transport_efficiency_0_1: float
+    overall_omega: float
+    athena_stage: AthenaStage
+    athena_confidence: float
+    verdict: ReadinessVerdict
+    bottleneck_layer: str
+    recommendation: str
+    evidence_tags: List[str] = field(default_factory=list)
+    warnings: List[str] = field(default_factory=list)

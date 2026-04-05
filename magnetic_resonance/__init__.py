@@ -35,6 +35,8 @@ from .contracts import (
     MagneticThermalInput,
     MRIScreeningReport,
     MagneticThermalResult,
+    SpaceGateDataCenterInput,
+    SpaceGateDataCenterReport,
     PlasmaTransportInput,
     PlasmaTransportResult,
     ReadinessVerdict,
@@ -76,6 +78,7 @@ from .sar_safety import screen_sar
 from .mri_screening import screen_mri
 from .foundation import analyze
 from .athena_stage import map_athena_stage
+from .space_gate_datacenter import screen_space_gate_datacenter
 from .ecosystem_bridges import (
     resonance_to_em_snapshot,
     try_frequency_resonance,
@@ -84,6 +87,8 @@ from .ecosystem_bridges import (
     try_optics_resonance_bridge,
     try_foundry_resonance_tick,
     try_manufacturing_resonance_readiness,
+    try_satellite_gate_bridge,
+    try_orbital_gate_bridge,
     mri_to_manufacturing_payload,
     gate_to_manufacturing_payload,
     try_mri_manufacturing_readiness,
@@ -143,6 +148,8 @@ __all__ = [
     "try_optics_resonance_bridge",
     "try_foundry_resonance_tick",
     "try_manufacturing_resonance_readiness",
+    "try_satellite_gate_bridge",
+    "try_orbital_gate_bridge",
     "mri_to_manufacturing_payload",
     "gate_to_manufacturing_payload",
     "try_mri_manufacturing_readiness",
@@ -161,6 +168,9 @@ __all__ = [
     "SARInput",
     "SARResult",
     "MRIScreeningReport",
+    "SpaceGateDataCenterInput",
+    "SpaceGateDataCenterReport",
+    "screen_space_gate_datacenter",
     "ResonanceMatchState",
     "RFTransferInput",
     "RFTransferResult",
