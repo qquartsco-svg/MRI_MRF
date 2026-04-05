@@ -1,0 +1,19 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.backends._legacy:_Backend"
+
+[project]
+name = "magnetic-resonance-foundation"
+version = "0.4.0"
+description = "Unified magnetic resonance screening: MRI design path (gradient, RF, Bloch, SNR, SAR) + space gate path (confinement, plasma, toroidal, RF link, Lagrange) sharing ω₀=γB₀."
+requires-python = ">=3.10"
+license = {text = "MIT"}
+
+[project.optional-dependencies]
+dev = ["pytest>=8.0"]
+
+[project.scripts]
+mag-resonance = "magnetic_resonance.cli:main"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
