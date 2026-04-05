@@ -55,12 +55,42 @@ def try_frequency_resonance(natural_hz: float, excitation_hz: float, damping: fl
 
 
 def try_superconducting_field(current_a: float = 100.0) -> Optional[Dict[str, Any]]:
-    """Superconducting_Magnet_Stack → 자기장 설계 조회."""
-    mod = _try_import("Superconducting_Magnet_Stack", "superconducting_magnet_stack.electromagnetic")
-    if mod is None:
+    """Superconducting_Magnet_Stack → 자기장/퀀치 readiness bridge."""
+    contracts_mod = _try_import("Superconducting_Magnet_Stack", "superconducting_magnet_stack.contracts")
+    pipeline_mod = _try_import("Superconducting_Magnet_Stack", "superconducting_magnet_stack.pipeline")
+    if contracts_mod is None or pipeline_mod is None:
         return None
     try:
-        return {"bridge": "superconducting_available"}
+        material = contracts_mod.MaterialCandidate(
+            name="NbTi",
+            tc_k=9.2,
+            jc_a_per_mm2_77k=3000.0,
+            bc2_t=14.5,
+            anisotropy=1.0,
+        )
+        cryo = contracts_mod.CryoProfile(
+            operating_temp_k=4.2,
+            heat_load_w=25.0,
+            cooling_capacity_w=80.0,
+        )
+        design = contracts_mod.MagnetDesign(
+            target_field_t=3.0,
+            operating_current_a=current_a,
+            conductor_cross_section_mm2=120.0,
+            inductance_h=8.0,
+            stored_energy_j=0.5 * 8.0 * current_a * current_a,
+            stress_mpa=120.0,
+            coil_length_m=2.0,
+            operating_temp_k=4.2,
+        )
+        readiness, quench = pipeline_mod.run_magnet_design_assessment(material, cryo, design)
+        return {
+            "bridge": "superconducting_available",
+            "omega_total": readiness.omega_total,
+            "verdict": readiness.verdict,
+            "quench_severity": quench.severity,
+            "target_field_t": design.target_field_t,
+        }
     except Exception:
         return None
 

@@ -316,6 +316,7 @@ python3 -m pytest tests/ -q
 | `Optics_Foundation` | 라모어 주파수 → 파장 snapshot → 광학 screening |
 | `Satellite_Design_Stack` | 게이트 하드웨어를 위성 payload mission으로 투영해 readiness 확인 |
 | `OrbitalCore_Engine` | 게이트/노드 배치를 궤도 건강도 `omega_orb`로 스크리닝 |
+| `Superconducting_Magnet_Stack` | 강자기장 코일을 quench/thermal/readiness 언어로 직접 스크리닝 |
 | `Manufacturing_Translation_Foundation` | 코일/구조물 제조 readiness handoff |
 | `Foundry_Implementation_Engine` | 공정/signoff readiness tick |
 | `Fabless-style semiconductor flow` | MTF adapter를 통한 간접 semiconductor chain 연결 |
@@ -421,6 +422,15 @@ report = screen_space_gate_datacenter(
 즉 MRF는 이제
 **공명/자기장 개념 -> 위성 탑재체 readiness -> 궤도 건강도 -> 제조/공정 handoff**
 까지 한 줄로 이어질 수 있습니다.
+
+## 시스템 스택 문서
+
+상위 연결 구조는 [SYSTEM_STACK.md](/Users/jazzin/Desktop/00_BRAIN/_staging/Magnetic_Resonance_Foundation/docs/SYSTEM_STACK.md) 에 정리했습니다.
+
+추천 데모:
+- [space_gate_datacenter_demo.py](/Users/jazzin/Desktop/00_BRAIN/_staging/Magnetic_Resonance_Foundation/examples/space_gate_datacenter_demo.py)
+- [factory_handoff_demo.py](/Users/jazzin/Desktop/00_BRAIN/_staging/Magnetic_Resonance_Foundation/examples/factory_handoff_demo.py)
+- [system_stack_demo.py](/Users/jazzin/Desktop/00_BRAIN/_staging/Magnetic_Resonance_Foundation/examples/system_stack_demo.py)
 
 ---
 

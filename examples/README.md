@@ -43,4 +43,22 @@ python3 examples/space_gate_datacenter_demo.py
 
 를 **서로 섞지 않고 층별로** 스크리닝하는 데모입니다.
 
+## system_stack_demo.py
+
+저장소 루트에서 실행:
+
+```bash
+python3 examples/system_stack_demo.py
+```
+
+이 예제는 MRF를 상위 시스템 관점에서 한 번에 보여줍니다.
+
+- `MRF -> SpaceThermal`
+- `MRF -> Satellite`
+- `MRF -> Orbital`
+- `MRF -> Manufacturing`
+- `MRF -> Foundry`
+- `MRF -> Fabless`
+- `MRF -> Superconducting_Magnet_Stack`
+
 개념 배경은 상위 디렉터리 [CONCEPT.md](../CONCEPT.md)를 참고하세요.

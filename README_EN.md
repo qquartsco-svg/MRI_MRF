@@ -288,6 +288,7 @@ python3 -m pytest tests/ -q    # 103 passed (v0.4.0)
 - `Optics_Foundation` — Larmor frequency → wavelength snapshot → optics screening
 - `Satellite_Design_Stack` — project gate hardware into a satellite payload mission and readiness report
 - `OrbitalCore_Engine` — project gate/node placement into orbital health language (`omega_orb`)
+- `Superconducting_Magnet_Stack` — directly screen high-field coils in quench/thermal/readiness language
 - `Manufacturing_Translation_Foundation` — coil/structure manufacturing readiness handoff
 - `Foundry_Implementation_Engine` — process/signoff readiness tick
 - `Fabless-style semiconductor flow` — indirect semiconductor-chain bridge via MTF adapters
@@ -383,6 +384,10 @@ MRF now also has direct bridges into satellite and orbital engines.
 
 So the repository can now connect:
 **resonance / magnetic concepts -> satellite payload readiness -> orbital health -> manufacturing and process handoff**.
+
+## System stack document
+
+The higher-level connection map is summarized in [docs/SYSTEM_STACK.md](/Users/jazzin/Desktop/00_BRAIN/_staging/Magnetic_Resonance_Foundation/docs/SYSTEM_STACK.md).
 
 ---
 
